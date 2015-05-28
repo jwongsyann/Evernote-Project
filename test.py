@@ -6,7 +6,7 @@ import evernote.edam.type.ttypes as Types
 from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import NoteFilter, NotesMetadataResultSpec
 
-auth_token = "S=s229:U=1c7ea93:E=1543bd9d2b5:C=14ce428a438:P=1cd:A=en-devtoken:V=2:H=113b4d49b7a65dc3e1caee5df19033fa"
+auth_token = "S=s223:U=2fd1532:E=154f1f20291:C=14d9a40d650:P=1cd:A=en-devtoken:V=2:H=17cdbeeaba89113ddd96fca5fe5e3d64"
 
 if auth_token == "your developer token":
     print "Please fill in your developer token"
@@ -36,7 +36,7 @@ print "Found", len(tags), "tags:"
 allTags = []
 for Tag in tags:
 	allTags.append(Tag.name)
-	
+
 print allTags
 
 notebooks = note_store.listNotebooks()
@@ -56,7 +56,7 @@ filter.ascending = False
 spec = NotesMetadataResultSpec()
 spec.includeTitle = True
 
-ourNoteList = note_store.findNotesMetadata(auth_token, filter, 0, 100, spec)
+ourNoteList = note_store.findNotesMetadata(auth_token, filter, 0, 100000, spec)
  
 for note in ourNoteList.notes:
     print "%s :: %s" % (note.guid, note.title)
