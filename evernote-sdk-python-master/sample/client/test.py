@@ -1,19 +1,32 @@
+
 import hashlib
 import binascii
 import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.type.ttypes as Types
 
 from evernote.api.client import EvernoteClient
-from evernote.edam.notestore.ttypes import NoteFilter, NotesMetadataResultSpec
+import sys, os.path, datetime, codecs
+import sqlite3
 
-auth_token = "S=s223:U=2fd1532:E=154f1f20291:C=14d9a40d650:P=1cd:A=en-devtoken:V=2:H=17cdbeeaba89113ddd96fca5fe5e3d64"
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+print SCRIPT_DIR
+
+# Real applications authenticate with Evernote using OAuth, but for the
+# purpose of exploring the API, you can get a developer token that allows
+# you to access your own Evernote account. To get a developer token, visit
+# https://sandbox.evernote.com/api/DeveloperToken.action
+auth_token = "S=s223:U=2fd1532:E=156dde7bf9e:C=14f86369058:P=1cd:A=en-devtoken:V=2:H=0ef2da0e34260962700c9a6867934426"
 
 if auth_token == "your developer token":
     print "Please fill in your developer token"
     print "To get a developer token, visit " \
         "https://sandbox.evernote.com/api/DeveloperToken.action"
     exit(1)
-	
+
+# Initial development is performed on our sandbox server. To use the production
+# service, change sandbox=False and replace your
+# developer token above with a token from
+# https://www.evernote.com/api/DeveloperToken.action
 client = EvernoteClient(token=auth_token, sandbox=False)
 
 user_store = client.get_user_store()
@@ -30,33 +43,9 @@ if not version_ok:
 
 note_store = client.get_note_store()
 
-tags = note_store.listTags()
-print "Found", len(tags), "tags:"
-
-allTags = []
-for Tag in tags:
-	allTags.append(Tag.name)
-
-print allTags
-
+# List all of the notebooks in the user's account
 notebooks = note_store.listNotebooks()
 print "Found ", len(notebooks), " notebooks:"
-
-notebookid = []
 for notebook in notebooks:
-	notebookid.append(notebook.guid)
+    print "  * ", notebook.name
 
-print notebookid[0]
-
-filter = NoteFilter()
-filter.notebookGuid = notebookid[0]
-
-filter.ascending = False
- 
-spec = NotesMetadataResultSpec()
-spec.includeTitle = True
-
-ourNoteList = note_store.findNotesMetadata(auth_token, filter, 0, 100000, spec)
- 
-for note in ourNoteList.notes:
-    print "%s :: %s" % (note.guid, note.title)
