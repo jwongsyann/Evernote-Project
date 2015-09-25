@@ -1,5 +1,5 @@
 library(XLConnect)
-setwd("~/../Desktop")
+setwd("~/../Desktop/Data")
 
 # APRA Monthly Banking Statistics
 url<-"http://www.apra.gov.au/adi/Publications/Documents/MBS-July-2015-BackSeries.xls"
@@ -84,9 +84,9 @@ file.remove(file)
 
 # BIS
 bis<-"https://www.bis.org/statistics/totcredit/totcredit.xlsx"
-file<-"totcredit.xls"
-download.file(bis,destfile="totcredit.xlsx",mode="wb")
-dat<-readWorksheetFromFile("totcredit.xlsx",sheet=3,startRow=3)
+file<-"totcredit.xlsx"
+download.file(bis,destfile=file,mode="wb")
+dat<-readWorksheetFromFile(file,sheet=3,startRow=3)
 names(dat)<-gsub("\\.","",names(dat))
 write.csv(dat,file="totcredit.csv",row.names=FALSE)
 file.remove(file)
